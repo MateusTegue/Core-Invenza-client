@@ -1,4 +1,8 @@
-import axios from 'axios'
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios"
+
+type RetryableRequestConfig = InternalAxiosRequestConfig & {
+    _retry?: boolean
+}
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -22,4 +26,62 @@ api.interceptors.request.use((config) => {
     return config
 })
 
-export default api;
+let refreshPromise: Promise<void> | null = null
+
+api.interceptors.response.use(
+    (response) => response,
+    async (error: AxiosError) => {
+        const originalRequest = error.config as RetryableRequestConfig | undefined
+        const status = error.response?.status
+
+        if (!originalRequest || status !== 401 || originalRequest._retry) {
+            return Promise.reject(error)
+        }
+
+        const requestUrl = originalRequest.url ?? ""
+        const isAuthRequest =
+            requestUrl.includes("/auth/login/") ||
+            requestUrl.includes("/auth/refresh/") ||
+            requestUrl.includes("/auth/me/")
+
+        if (isAuthRequest) {
+            return Promise.reject(error)
+        }
+
+        const refreshToken = localStorage.getItem("refresh")
+        if (!refreshToken) {
+            return Promise.reject(error)
+        }
+
+        originalRequest._retry = true
+
+        try {
+            if (!refreshPromise) {
+                refreshPromise = api
+                    .post(
+                        "/auth/refresh/",
+                        { refresh: refreshToken },
+                        { skipAuth: true }
+                    )
+                    .then((response) => {
+                        const nextAccess = response.data?.access
+                        const nextRefresh = response.data?.refresh
+                        if (nextAccess) localStorage.setItem("access", nextAccess)
+                        if (nextRefresh) localStorage.setItem("refresh", nextRefresh)
+                    })
+                    .finally(() => {
+                        refreshPromise = null
+                    })
+            }
+
+            await refreshPromise
+            return api(originalRequest)
+        } catch (refreshError) {
+            localStorage.removeItem("access")
+            localStorage.removeItem("refresh")
+            return Promise.reject(refreshError)
+        }
+    }
+)
+
+export default api

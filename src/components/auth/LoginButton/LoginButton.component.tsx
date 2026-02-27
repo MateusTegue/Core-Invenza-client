@@ -1,11 +1,13 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { SingInIcon } from "@/assets/icons"
 import { Input } from "@/components/ui/input"
-import { login } from "@/api/login.api"
+import { getCurrentSession, login } from "@/api/login.api"
+import { toastAuthMessages } from "@/helpers/toast-messages.helpers"
+import { toast } from "@/helpers/toast.helper"
 
 
 
@@ -13,17 +15,30 @@ const LoginButton = () => {
     const router = useRouter()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        const checkExistingSession = async () => {
+            try {
+                await getCurrentSession()
+                router.replace('/admin/dashboard')
+            } catch {
+                // Ignore: user is not authenticated yet.
+            }
+        }
+
+        void checkExistingSession()
+    }, [router])
 
     const handleLogin = async () => {
         try {
             setLoading(true)
-            setError('')
             await login(email, password)
+            toast.success(toastAuthMessages.success.login)
             router.push('/admin/dashboard')
-        } catch (err: any) {
-            setError(err)
+        } catch (err: unknown) {
+            const message = typeof err === "string" ? err : toastAuthMessages.error.login
+            toast.error(message)
         } finally {
             setLoading(false)
         }

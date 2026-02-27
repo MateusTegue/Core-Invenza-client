@@ -1,27 +1,35 @@
 import api from "@/lib/api.axios"
+import { AuthUser, LoginResponse } from "@/constants/models"
+import { resolveUserFromLogin } from "@/lib/auth-user"
+import { clearAuthStorage, getStoredUserFromStorage, saveAuthStorage,} from "@/lib/auth-storage"
+import { getApiErrorMessage } from "@/helpers/api-error.helper"
 
 export const login = async (email: string, password: string) => {
-    try {
-        // Evita enviar tokens viejos/expirados al endpoint de login.
-        localStorage.removeItem('access')
-        localStorage.removeItem('refresh')
+  try {
+    clearAuthStorage()
+    const response = await api.post<LoginResponse>(
+      "/auth/login/",
+      { email, password },
+      { skipAuth: true }
+    )
 
-        const data = { email, password }
-        const response = await api.post('/auth/login/', data, {
-            skipAuth: true,
-        
-        } );
-
-        localStorage.setItem('access', response.data.access)
-        localStorage.setItem('refresh', response.data.refresh)
-
-        return response.data
-    } catch (error: any) {
-        throw error.response?.data?.detail || error.response?.data?.error || 'Error al iniciar sesion'
-    }
+    const { access, refresh } = response.data
+    saveAuthStorage(access, refresh, resolveUserFromLogin(response.data))
+    return response.data
+  } catch (error: unknown) {
+    throw getApiErrorMessage(error)
+  }
 }
 
 export const logout = () => {
-    localStorage.removeItem('access')
-    localStorage.removeItem('refresh')
+  clearAuthStorage()
+}
+
+export const getCurrentSession = async () => {
+  const response = await api.get("/auth/me/")
+  return response.data
+}
+
+export const getStoredUser = (): AuthUser | null => {
+  return getStoredUserFromStorage()
 }
