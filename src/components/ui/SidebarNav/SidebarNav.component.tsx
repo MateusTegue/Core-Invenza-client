@@ -65,11 +65,11 @@ const SidebarNav = () => {
             )
           })}
         </div>
-        <div className="mt-auto px-4 py-4 border-t">
+        <div className="mt-auto px-4 py-4 border-t text-center ">
           <Link
             href="/logout"
             className={cn(
-              "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              "flex items-center text-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
               isCollapsed ? "justify-center" : "gap-3",
               "text-destructive hover:bg-destructive/10"
             )}
@@ -82,7 +82,7 @@ const SidebarNav = () => {
 
           {!isCollapsed && (
             <p className="mt-4 text-xs text-muted-foreground text-center">
-              Developed by Viax Team
+              Developed by TechSolutions
             </p>
           )}
 
