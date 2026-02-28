@@ -31,7 +31,7 @@ const getFormStateFromUser = (user: AuthUser | null): ProfileFormState => ({
   last_name: user?.last_name ?? "",
   email: user?.email ?? "",
   phone: user?.phone ?? "",
-  company_name: user?.company_name ?? "",
+  company_name: user?.company_name ?? user?.name_company ?? "",
 })
 
 const UpdateProfileUser = ({ user, onSaved, onCancel }: UpdateProfileUserProps) => {
@@ -99,7 +99,19 @@ const UpdateProfileUser = ({ user, onSaved, onCancel }: UpdateProfileUserProps) 
         ...(user ?? {}),
         ...payload,
         id: typeof responseUser.id === "string" ? responseUser.id : resolvedId,
-        company_name: typeof responseUser.company_name === "string" ? responseUser.company_name : payload.company_name,
+        company_name:
+          typeof responseUser.company_name === "string"
+            ? responseUser.company_name
+            : typeof responseUser.name_company === "string"
+              ? responseUser.name_company
+              : payload.company_name,
+        name_company:
+          typeof responseUser.name_company === "string"
+            ? responseUser.name_company
+            : typeof responseUser.company_name === "string"
+              ? responseUser.company_name
+              : payload.company_name,
+        role: typeof responseUser.role === "string" ? responseUser.role : user?.role,
       }
 
       saveStoredUserToStorage(updatedUser)

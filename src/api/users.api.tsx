@@ -5,7 +5,7 @@ export const listUsers = async () => {
   return response.data
 }
 
-export const createUser = async (userData: Record<string, unknown>) => {
+export const createUser = async <T extends object>(userData: T) => {
   const response = await api.post("/users/create/", userData)
   return response.data
 }
@@ -15,7 +15,7 @@ export const getUserById = async (userId: string) => {
   return response.data
 }
 
-export const updateUser = async (userId: string, userData: Record<string, unknown>) => {
+export const updateUser = async <T extends object>(userId: string, userData: T) => {
   const response = await api.put(`/users/update/${userId}/`, userData)
   return response.data
 }

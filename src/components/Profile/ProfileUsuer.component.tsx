@@ -73,6 +73,11 @@ const ProfileUser = () => {
                       <p className="text-sm text-muted-foreground">Telefono</p>
                       <p className="font-medium">{user?.phone ?? "No disponible"}</p>
                     </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Rol</p>
+                      <p className="font-medium">{user?.role ?? "No disponible"}</p>
+                    </div>
+                    
                   </div>
 
                   <h3 className="text-lg font-semibold">Informacion de la empresa</h3>

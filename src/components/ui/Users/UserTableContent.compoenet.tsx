@@ -5,9 +5,11 @@ type UserTableContentProps = {
   users: UserListItem[]
   isLoading: boolean
   error: string | null
+  onUserDeleted: () => void
+  onUserUpdated: () => void
 }
 
-const UserTableContent = ({ users, isLoading, error }: UserTableContentProps) => {
+const UserTableContent = ({ users, isLoading, error, onUserDeleted, onUserUpdated }: UserTableContentProps) => {
   if (isLoading) {
     return (
       <TableBody>
@@ -45,12 +47,14 @@ const UserTableContent = ({ users, isLoading, error }: UserTableContentProps) =>
   }
 
   return (
-    <TableBody >
+    <TableBody>
       {users.map((user, index) => (
         <UsersItem
           key={user.id ?? user.email ?? `${user.name}-${user.last_name}-${index}`}
           user={user}
           index={index}
+          onUserDeleted={onUserDeleted}
+          onUserUpdated={onUserUpdated}
         />
       ))}
     </TableBody>

@@ -9,8 +9,8 @@ const UserTableFooter = ({ totalUsers }: UserTableFooterProps) => {
     return (
         <TableFooter className="border-0 bg-transparent">
             <TableRow className="border-0">
-                <TableCell colSpan={5}>
-                    <div className="flex justify-end pr-10">
+                <TableCell colSpan={8}>
+                    <div className="flex justify-end">
                         Total usuarios: {totalUsers}
                         <EmployeesIcon className="inline-block w-5 h-5 text-muted-foreground ml-1" />
                     </div>

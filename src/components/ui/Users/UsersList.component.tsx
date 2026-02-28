@@ -2,13 +2,16 @@
 
 import { useEffect, useState } from "react"
 import { listUsers } from "@/api/users.api"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table } from "@/components/ui/table"
 import UserTableHeader from "@/components/ui/Users/UserTableHeader.component"
 import UserTableContent from "@/components/ui/Users/UserTableContent.compoenet"
 import UserTableFooter from "@/components/ui/Users/UserTableFooter.component"
 import { UserListItem } from "@/components/ui/Users/UsersItem.component"
+
+type UsersListProps = {
+  refreshTrigger?: number
+}
 
 const getUsersFromResponse = (payload: unknown): UserListItem[] => {
   if (Array.isArray(payload)) {
@@ -25,7 +28,7 @@ const getUsersFromResponse = (payload: unknown): UserListItem[] => {
   return (fromResults ?? fromUsers ?? fromData ?? []) as UserListItem[]
 }
 
-const UsersList = () => {
+const UsersList = ({ refreshTrigger = 0 }: UsersListProps) => {
   const [users, setUsers] = useState<UserListItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -46,7 +49,7 @@ const UsersList = () => {
 
   useEffect(() => {
     void fetchUsers()
-  }, [])
+  }, [refreshTrigger])
 
   return (
     <section className="space-y-4">
@@ -54,7 +57,13 @@ const UsersList = () => {
         <CardContent className="p-0 border-none shadow-none rounded-none">
           <Table>
             <UserTableHeader />
-            <UserTableContent users={users} isLoading={isLoading} error={error} />
+            <UserTableContent
+              users={users}
+              isLoading={isLoading}
+              error={error}
+              onUserDeleted={fetchUsers}
+              onUserUpdated={fetchUsers}
+            />
             {!isLoading && !error && <UserTableFooter totalUsers={users.length} />}
           </Table>
         </CardContent>

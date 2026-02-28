@@ -14,6 +14,8 @@ export const toastCrudMessages = {
   },
   error: {
     create: (entity?: EntityName) => `No se pudo crear ${normalizeEntity(entity)}.`,
+    requiredFieldsForCreate: (entity?: EntityName) =>
+      `Completa los campos obligatorios para crear ${normalizeEntity(entity)}.`,
     read: (entity?: EntityName) => `No se pudo cargar ${normalizeEntity(entity)}.`,
     update: (entity?: EntityName) => `No se pudo actualizar ${normalizeEntity(entity)}.`,
     delete: (entity?: EntityName) => `No se pudo eliminar ${normalizeEntity(entity)}.`,

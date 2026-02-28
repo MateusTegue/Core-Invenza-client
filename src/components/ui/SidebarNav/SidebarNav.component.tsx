@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { DashboardIcon, LogoutIcon,  ShowSidebarIcon, OcultSidebarIcon } from "@/assets/icons"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import navItems from "@/setting/navSetting/navSettingDefault"
 import { cn } from "@/lib/utils"
 import {  useState } from "react"
@@ -14,7 +15,6 @@ const SidebarNav = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const user = getStoredUser()
   
-
   return (
     <div
       className={cn(
@@ -36,9 +36,12 @@ const SidebarNav = () => {
 
       <nav className="flex flex-col flex-1 w-full">
         <div className={cn( "px-4 py-6 border-b flex", isCollapsed ? "justify-center" : "flex-col items-center")}>
-          <img src="/logo.png" alt="Profile" className="h-8 w-8" />
+          <Avatar className="w-10 h-10">
+            <AvatarImage src={user?.picture ?? "/avatar.jpg"} />
+            <AvatarFallback>{user ? `${user.name?.[0] ?? "U"}${user.last_name?.[0] ?? ""}`.toUpperCase() : "U"}</AvatarFallback>
+          </Avatar>
           {!isCollapsed && (
-            <h1 className="text-xl  mt-2">{user ? `${user.name} ${user.last_name}` : "Usuario"}</h1>
+            <h1 className="text-xl mt-2">{user ? `${user.name} ${user.last_name}` : "Usuario"}</h1>
           )}
         </div>
 
