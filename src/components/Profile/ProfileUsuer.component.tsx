@@ -1,21 +1,29 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { EdictIcon } from "@/assets/icons"
 import { getStoredUser } from "@/api/login.api"
+import { AuthUser } from "@/constants/models"
+import UpdateProfileUser from "@/components/ui/UpdateProfileUser/UpdateProfileUser.component"
 
 const ProfileUser = () => {
-  const user = getStoredUser()
+  const [user, setUser] = useState<AuthUser | null>(() => getStoredUser())
+  const [isEditing, setIsEditing] = useState(false)
 
   const initials = useMemo(() => {
     const first = user?.name?.[0] ?? "U"
     const last = user?.last_name?.[0] ?? ""
     return `${first}${last}`.toUpperCase()
   }, [user])
+
+  const handleSaved = (updatedUser: AuthUser) => {
+    setUser(updatedUser)
+    setIsEditing(false)
+  }
 
   return (
     <section className="w-full h-full p-8 flex justify-center items-center">
@@ -35,28 +43,55 @@ const ProfileUser = () => {
                 <p className="text-muted-foreground">Usuario del sistema</p>
               </div>
 
-              <Button className="w-full flex items-center justify-center gap-2">
-                <EdictIcon width={16} height={16} />
-                Editar perfil
-              </Button>
+              {!isEditing && (
+                <Button
+                  type="button"
+                  className="w-full flex items-center justify-center gap-2"
+                  onClick={() => setIsEditing(true)}
+                >
+                  <EdictIcon width={16} height={16} />
+                  Editar perfil
+                </Button>
+              )}
             </article>
 
             <article className="space-y-6">
-              <h3 className="text-lg font-semibold">Informacion del perfil</h3>
-
+              <h3 className="text-lg font-semibold">
+                {isEditing ? "Editar perfil" : "Informacion del perfil"}
+              </h3>
               <Separator />
 
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">Email</p>
-                  <p className="font-medium">{user?.email ?? "No disponible"}</p>
-                </div>
+              {!isEditing ? (
+                <>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Email</p>
+                      <p className="font-medium">{user?.email ?? "No disponible"}</p>
+                    </div>
 
-                <div>
-                  <p className="text-sm text-muted-foreground">Telefono</p>
-                  <p className="font-medium">{user?.phone ?? "No disponible"}</p>
-                </div>
-              </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Telefono</p>
+                      <p className="font-medium">{user?.phone ?? "No disponible"}</p>
+                    </div>
+                  </div>
+
+                  <h3 className="text-lg font-semibold">Informacion de la empresa</h3>
+                  <Separator />
+
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Nombre de la empresa</p>
+                      <p className="font-medium">{user?.company_name ?? "No disponible"}</p>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <UpdateProfileUser
+                  user={user}
+                  onSaved={handleSaved}
+                  onCancel={() => setIsEditing(false)}
+                />
+              )}
             </article>
           </div>
         </CardContent>

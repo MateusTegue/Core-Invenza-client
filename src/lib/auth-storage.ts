@@ -18,6 +18,15 @@ export const saveAuthStorage = (
   if (user) localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user))
 }
 
+export const saveStoredUserToStorage = (user: AuthUser | null) => {
+  if (!user) {
+    localStorage.removeItem(USER_STORAGE_KEY)
+    return
+  }
+
+  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user))
+}
+
 export const getStoredUserFromStorage = (): AuthUser | null => {
   const rawUser = localStorage.getItem(USER_STORAGE_KEY)
   if (!rawUser) return null

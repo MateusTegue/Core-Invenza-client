@@ -2,15 +2,18 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { DashboardIcon, LogoutIcon, ProfileIcon, SettingsIcon, ShowSidebarIcon, OcultSidebarIcon, ClientsIcon, ReportsIcon } from "@/assets/icons"
+import { DashboardIcon, LogoutIcon,  ShowSidebarIcon, OcultSidebarIcon } from "@/assets/icons"
 import navItems from "@/setting/navSetting/navSettingDefault"
 import { cn } from "@/lib/utils"
-import { useState } from "react"
+import {  useState } from "react"
+import { getStoredUser } from "@/api/login.api"
 
 
 const SidebarNav = () => {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const user = getStoredUser()
+  
 
   return (
     <div
@@ -35,7 +38,7 @@ const SidebarNav = () => {
         <div className={cn( "px-4 py-6 border-b flex", isCollapsed ? "justify-center" : "flex-col items-center")}>
           <img src="/logo.png" alt="Profile" className="h-8 w-8" />
           {!isCollapsed && (
-            <h1 className="text-xl  mt-2">Matius</h1>
+            <h1 className="text-xl  mt-2">{user ? `${user.name} ${user.last_name}` : "Usuario"}</h1>
           )}
         </div>
 
