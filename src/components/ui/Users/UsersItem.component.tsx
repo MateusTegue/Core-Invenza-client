@@ -6,6 +6,7 @@ export type UserListItem = {
   id?: string
   name?: string
   last_name?: string
+  cedula?: string
   document_number?: string
   email?: string
   phone?: string
@@ -21,13 +22,14 @@ type UsersItemProps = {
 }
 
 const UsersItem = ({ user, index, onUserDeleted, onUserUpdated }: UsersItemProps) => {
-  const fullName = `${user.name ?? ""} ${user.last_name ?? ""}`.trim() || "Sin nombre"
+  //const fullName = `${user.name ?? ""} ${user.last_name ?? ""}`.trim() || "Sin nombre"
+  const documentValue = user.cedula ?? user.document_number
 
   return (
     <TableRow className="border-none">
-      <TableCell className="font-medium">{fullName}</TableCell>
+      <TableCell className="font-medium">{user?.name ?? "No disponible"}</TableCell>
       <TableCell>{user.last_name ?? "No disponible"}</TableCell>
-      <TableCell>{user?.document_number ?? "No disponible"}</TableCell>
+      <TableCell>{documentValue ?? "No disponible"}</TableCell>
       <TableCell className="break-all">{user.email ?? "No disponible"}</TableCell>
       <TableCell>{user.phone ?? "No disponible"}</TableCell>
       <TableCell>{user.address ?? "No disponible"}</TableCell>

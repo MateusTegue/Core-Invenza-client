@@ -65,6 +65,11 @@ const ProfileUser = () => {
                 <>
                   <div className="space-y-4">
                     <div>
+                      <p className="text-sm text-muted-foreground">Cedula</p>
+                      <p className="font-medium">{user?.cedula ?? user?.document_number ?? "No disponible"}</p>
+                    </div>
+
+                    <div>
                       <p className="text-sm text-muted-foreground">Email</p>
                       <p className="font-medium">{user?.email ?? "No disponible"}</p>
                     </div>

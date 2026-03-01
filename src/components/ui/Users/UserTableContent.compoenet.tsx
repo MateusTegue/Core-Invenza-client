@@ -14,7 +14,7 @@ const UserTableContent = ({ users, isLoading, error, onUserDeleted, onUserUpdate
     return (
       <TableBody>
         <TableRow className="border-0">
-          <TableCell colSpan={5} className="text-center text-muted-foreground py-6">
+          <TableCell colSpan={8} className="text-center text-muted-foreground py-6">
             Cargando usuarios...
           </TableCell>
         </TableRow>
@@ -26,7 +26,7 @@ const UserTableContent = ({ users, isLoading, error, onUserDeleted, onUserUpdate
     return (
       <TableBody>
         <TableRow className="border-0">
-          <TableCell colSpan={5} className="text-center text-destructive py-6">
+          <TableCell colSpan={8} className="text-center text-destructive py-6">
             {error}
           </TableCell>
         </TableRow>
@@ -38,7 +38,7 @@ const UserTableContent = ({ users, isLoading, error, onUserDeleted, onUserUpdate
     return (
       <TableBody>
         <TableRow className="border-0">
-          <TableCell colSpan={5} className="text-center text-muted-foreground py-6">
+          <TableCell colSpan={8} className="text-center text-muted-foreground py-6">
             No hay usuarios registrados.
           </TableCell>
         </TableRow>

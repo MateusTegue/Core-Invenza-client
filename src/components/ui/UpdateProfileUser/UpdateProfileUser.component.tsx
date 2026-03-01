@@ -11,10 +11,12 @@ import { resolveUserFromLogin, resolveUserIdFromPayload } from "@/lib/auth-user"
 import { toast } from "@/helpers/toast.helper"
 import { toastCrudMessages } from "@/helpers/toast-messages.helpers"
 import { Card, CardContent } from "../card"
+import { SaveIcon } from "@/assets/icons"
 
 type ProfileFormState = {
   name: string
   last_name: string
+  cedula: string
   email: string
   phone: string
   company_name: string
@@ -29,6 +31,7 @@ type UpdateProfileUserProps = {
 const getFormStateFromUser = (user: AuthUser | null): ProfileFormState => ({
   name: user?.name ?? "",
   last_name: user?.last_name ?? "",
+  cedula: user?.cedula ?? user?.document_number ?? "",
   email: user?.email ?? "",
   phone: user?.phone ?? "",
   company_name: user?.company_name ?? user?.name_company ?? "",
@@ -74,7 +77,7 @@ const UpdateProfileUser = ({ user, onSaved, onCancel }: UpdateProfileUserProps) 
       return
     }
 
-    if (!formData.name.trim() || !formData.last_name.trim() || !formData.email.trim() || !formData.phone.trim()) {
+    if (!formData.name.trim() || !formData.last_name.trim() || !formData.cedula.trim() || !formData.email.trim() || !formData.phone.trim()) {
       toast.error("Completa los campos obligatorios para guardar el perfil.")
       return
     }
@@ -82,6 +85,8 @@ const UpdateProfileUser = ({ user, onSaved, onCancel }: UpdateProfileUserProps) 
     const payload = {
       name: formData.name.trim(),
       last_name: formData.last_name.trim(),
+      cedula: formData.cedula.trim(),
+      document_number: formData.cedula.trim(),
       email: formData.email.trim(),
       phone: formData.phone.trim(),
       company_name: formData.company_name.trim(),
@@ -112,6 +117,18 @@ const UpdateProfileUser = ({ user, onSaved, onCancel }: UpdateProfileUserProps) 
               ? responseUser.company_name
               : payload.company_name,
         role: typeof responseUser.role === "string" ? responseUser.role : user?.role,
+        cedula:
+          typeof responseUser.cedula === "string"
+            ? responseUser.cedula
+            : typeof responseUser.document_number === "string"
+              ? responseUser.document_number
+              : payload.cedula,
+        document_number:
+          typeof responseUser.document_number === "string"
+            ? responseUser.document_number
+            : typeof responseUser.cedula === "string"
+              ? responseUser.cedula
+              : payload.document_number,
       }
 
       saveStoredUserToStorage(updatedUser)
@@ -139,6 +156,11 @@ const UpdateProfileUser = ({ user, onSaved, onCancel }: UpdateProfileUserProps) 
       </CardContent>
 
       <CardContent className="p-0">
+        <p className="text-sm text-muted-foreground">Cedula</p>
+        <Input name="cedula" value={formData.cedula} onChange={handleInputChange} />
+      </CardContent>
+
+      <CardContent className="p-0">
         <p className="text-sm text-muted-foreground">Email</p>
         <Input name="email" type="email" value={formData.email} onChange={handleInputChange} />
       </CardContent>
@@ -155,6 +177,7 @@ const UpdateProfileUser = ({ user, onSaved, onCancel }: UpdateProfileUserProps) 
 
       <div className="flex gap-2 pt-2">
         <Button type="button" className="w-full" onClick={handleSaveProfile} disabled={isSaving}>
+          <SaveIcon width={16} height={16} />
           {isSaving ? "Guardando..." : "Guardar cambios"}
         </Button>
         <Button type="button" variant="outline" className="w-full" onClick={onCancel} disabled={isSaving}>

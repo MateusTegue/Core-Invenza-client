@@ -77,6 +77,12 @@ export const resolveUserFromLogin = (payload: unknown): AuthUser | null => {
       : typeof candidate.name_company === "string"
         ? candidate.name_company
         : undefined
+  const resolvedCedula =
+    typeof candidate.cedula === "string"
+      ? candidate.cedula
+      : typeof candidate.document_number === "string"
+        ? candidate.document_number
+        : undefined
 
   return {
     id: resolveUserIdFromPayload(payload),
@@ -87,6 +93,8 @@ export const resolveUserFromLogin = (payload: unknown): AuthUser | null => {
     company_name: resolvedCompanyName,
     name_company: resolvedCompanyName,
     company_id: resolveCompanyIdFromPayload(payload),
+    cedula: resolvedCedula,
+    document_number: resolvedCedula,
     role: typeof candidate.role === "string" ? candidate.role : undefined,
   }
 }

@@ -1,11 +1,14 @@
-"use client"
+﻿"use client"
 
 import { useState } from "react"
 import UsersList from "@/components/ui/Users/UsersList.component"
-import ToolUser from "@/components/ui/Tools/ToolUser.component"
+import Tool from "@/components/ui/Tools/Tool.component"
+import CreateUserButton from "@/components/ui/CreateUserButton/CreateUserButton.component"
 
 const EmployeesPage = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [isSearching, setIsSearching] = useState(false)
 
   const handleUserCreated = () => {
     setRefreshTrigger((prev) => prev + 1)
@@ -13,8 +16,14 @@ const EmployeesPage = () => {
 
   return (
     <section className="space-y-4">
-      <ToolUser onUserCreated={handleUserCreated} />
-      <UsersList refreshTrigger={refreshTrigger} />
+      <Tool
+        title="Gestion de empleados"
+        description="Crea, busca y administra los usuarios del sistema"
+        createAction={<CreateUserButton onUserCreated={handleUserCreated} />}
+        isSearching={isSearching}
+        onSearch={setSearchQuery}
+      />
+      <UsersList refreshTrigger={refreshTrigger} searchQuery={searchQuery} onLoadingChange={setIsSearching} />
     </section>
   )
 }

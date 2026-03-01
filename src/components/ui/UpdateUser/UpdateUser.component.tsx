@@ -5,7 +5,7 @@ import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateUser } from "@/api/users.api"
-import { EdictIcon } from "@/assets/icons"
+import { EdictIcon, SaveIcon } from "@/assets/icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -24,6 +24,7 @@ type UpdateUserModel = {
   id?: string
   name?: string
   last_name?: string
+  cedula?: string
   document_number?: string
   email?: string
   phone?: string
@@ -51,7 +52,7 @@ type UpdateUserSchema = z.infer<typeof updateUserSchema>
 const toDefaultValues = (user: UpdateUserModel): UpdateUserSchema => ({
   name: user.name ?? "",
   last_name: user.last_name ?? "",
-  document_number: user.document_number ?? "",
+  document_number: user.document_number ?? user.cedula ?? "",
   email: user.email ?? "",
   phone: user.phone ?? "",
   address: user.address ?? "",
@@ -83,6 +84,7 @@ const UpdateUser = ({ user, onUpdated }: UpdateUserProps) => {
       await updateUser(user.id, {
         name: values.name.trim(),
         last_name: values.last_name.trim(),
+        cedula: values.document_number.trim(),
         document_number: values.document_number.trim(),
         email: values.email.trim(),
         phone: values.phone.trim(),
@@ -115,7 +117,7 @@ const UpdateUser = ({ user, onUpdated }: UpdateUserProps) => {
 
       <DialogContent className="w-full max-w-2xl max-h-[90vh] overflow-y-auto !rounded-sm">
         <DialogHeader>
-          <DialogTitle>Editar usuario</DialogTitle>
+          <DialogTitle>Editar empleado</DialogTitle>
         </DialogHeader>
 
         <form className="space-y-4 flex flex-col" noValidate onSubmit={form.handleSubmit(handleUpdateUser)}>
@@ -160,17 +162,12 @@ const UpdateUser = ({ user, onUpdated }: UpdateUserProps) => {
             <p className="text-sm text-muted-foreground">Direccion</p>
             <Input {...form.register("address")} />
           </div>
-
-          <div>
-            <p className="text-sm text-muted-foreground">Empresa</p>
-            <Input {...form.register("company_name")} />
-          </div>
-
           <DialogFooter className="flex gap-2 pt-2">
             <Button type="button" variant="outline" className="w-full" onClick={() => setIsOpen(false)} disabled={isSaving}>
               Cancelar
             </Button>
             <Button type="submit" disabled={isSaving} className="w-full">
+              <SaveIcon width={16} height={16} />
               {isSaving ? "Guardando..." : "Guardar cambios"}
             </Button>
           </DialogFooter>

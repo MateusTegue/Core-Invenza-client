@@ -93,6 +93,7 @@ const CreateUser = ({ initialData, onCreated, onCancel, submitLabel = "Crear usu
 
     const createPayload = {
       ...payload,
+      cedula: values.document_number.trim(),
       password: values.password,
     }
 

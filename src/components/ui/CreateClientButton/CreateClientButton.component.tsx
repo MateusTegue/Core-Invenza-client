@@ -1,29 +1,29 @@
-"use client"
+﻿"use client"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import CreateUserForm from "@/components/ui/CreateUserForm/CreateUserForm.component"
-import { CreateUserProps, User } from "@/constants/models"
+import CreateClientForm from "@/components/ui/CreateClientForm/CreateClientForm.component"
+import { Client } from "@/constants/models"
 import { ClouseIcon } from "@/assets/icons"
 
-type CreateUserButtonProps = {
+type CreateClientButtonProps = {
   buttonLabel?: string
   title?: string
-  initialData?: Partial<User>
-  onUserCreated?: (createdUser: Record<string, unknown>) => void
+  initialData?: Partial<Client>
+  onClientCreated?: (createdClient: Record<string, unknown>) => void
 }
 
-const CreateUserButton = ({
-  buttonLabel = "Crear usuario",
-  title = "Nuevo usuario",
+const CreateClientButton = ({
+  buttonLabel = "Crear cliente",
+  title = "Nuevo cliente",
   initialData,
-  onUserCreated,
-}: CreateUserButtonProps) => {
+  onClientCreated,
+}: CreateClientButtonProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
-  const handleCreated: NonNullable<CreateUserProps["onCreated"]> = (createdUser) => {
-    onUserCreated?.(createdUser)
+  const handleCreated = (createdClient: Record<string, unknown>) => {
+    onClientCreated?.(createdClient)
     setIsOpen(false)
   }
 
@@ -33,15 +33,9 @@ const CreateUserButton = ({
         {buttonLabel}
       </Button>
 
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-          onClick={() => setIsOpen(false)}
-        >
-          <Card
-            className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-sm"
-            onClick={(event) => event.stopPropagation()}
-          >
+      {isOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setIsOpen(false)}>
+          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-sm" onClick={(event) => event.stopPropagation()}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
               <CardTitle>{title}</CardTitle>
               <Button type="button" variant="ghost" onClick={() => setIsOpen(false)}>
@@ -49,7 +43,7 @@ const CreateUserButton = ({
               </Button>
             </CardHeader>
             <CardContent>
-              <CreateUserForm
+              <CreateClientForm
                 initialData={initialData}
                 onCreated={handleCreated}
                 onCancel={() => setIsOpen(false)}
@@ -58,9 +52,9 @@ const CreateUserButton = ({
             </CardContent>
           </Card>
         </div>
-      )}
+      ) : null}
     </div>
   )
 }
 
-export default CreateUserButton;
+export default CreateClientButton

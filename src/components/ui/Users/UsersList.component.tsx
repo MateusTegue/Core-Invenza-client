@@ -1,7 +1,7 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState } from "react"
-import { listUsers } from "@/api/users.api"
+import { listUsers, searchUsers } from "@/api/users.api"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table } from "@/components/ui/table"
 import UserTableHeader from "@/components/ui/Users/UserTableHeader.component"
@@ -11,6 +11,8 @@ import { UserListItem } from "@/components/ui/Users/UsersItem.component"
 
 type UsersListProps = {
   refreshTrigger?: number
+  searchQuery?: string
+  onLoadingChange?: (isLoading: boolean) => void
 }
 
 const getUsersFromResponse = (payload: unknown): UserListItem[] => {
@@ -28,7 +30,7 @@ const getUsersFromResponse = (payload: unknown): UserListItem[] => {
   return (fromResults ?? fromUsers ?? fromData ?? []) as UserListItem[]
 }
 
-const UsersList = ({ refreshTrigger = 0 }: UsersListProps) => {
+const UsersList = ({ refreshTrigger = 0, searchQuery = "", onLoadingChange }: UsersListProps) => {
   const [users, setUsers] = useState<UserListItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -36,20 +38,24 @@ const UsersList = ({ refreshTrigger = 0 }: UsersListProps) => {
   const fetchUsers = async () => {
     try {
       setIsLoading(true)
+      onLoadingChange?.(true)
       setError(null)
-      const response = await listUsers()
+      const response = searchQuery
+        ? await searchUsers({ search: searchQuery })
+        : await listUsers()
       setUsers(getUsersFromResponse(response))
     } catch {
       setError("No se pudo cargar la lista de usuarios.")
       setUsers([])
     } finally {
       setIsLoading(false)
+      onLoadingChange?.(false)
     }
   }
 
   useEffect(() => {
     void fetchUsers()
-  }, [refreshTrigger])
+  }, [refreshTrigger, searchQuery])
 
   return (
     <section className="space-y-4">

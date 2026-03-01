@@ -1,4 +1,5 @@
 import api from "@/lib/api.axios"
+import { SearchUsersParams } from "@/constants/models"
 
 export const listUsers = async () => {
   const response = await api.get("/users/list/")
@@ -22,5 +23,19 @@ export const updateUser = async <T extends object>(userId: string, userData: T) 
 
 export const deleteUser = async (userId: string) => {
   const response = await api.delete(`/users/delete/${userId}/`)
+  return response.data
+}
+
+export const searchUsers = async (params: SearchUsersParams) => {
+  const queryParams = new URLSearchParams()
+
+  if (params.search) queryParams.set("search", params.search)
+  if (params.name) queryParams.set("name", params.name)
+  if (params.last_name) queryParams.set("last_name", params.last_name)
+  if (params.cedula) queryParams.set("cedula", params.cedula)
+  if (params.document_number) queryParams.set("document_number", params.document_number)
+
+  const suffix = queryParams.toString()
+  const response = await api.get(`/users/search/${suffix ? `?${suffix}` : ""}`)
   return response.data
 }
