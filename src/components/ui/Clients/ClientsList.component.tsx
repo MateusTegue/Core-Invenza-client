@@ -55,19 +55,21 @@ const ClientsList = ({ refreshTrigger = 0, searchQuery = "", onLoadingChange }: 
   }, [refreshTrigger, searchQuery])
 
   return (
-    <section className="space-y-4">
-      <Card className="rounded-none border-0 shadow-none">
-        <CardContent className="p-0 border-none shadow-none rounded-none">
-          <Table>
-            <ClientTableHeader />
-            <ClientTableContent
-              clients={clients}
-              isLoading={isLoading}
-              error={error}
-              onClientUpdated={fetchClients}
-            />
-            {!isLoading && !error && <ClientTableFooter totalClients={clients.length} />}
-          </Table>
+    <section className="h-full min-h-0 space-y-4">
+      <Card className="h-full rounded-none border-0 shadow-none">
+        <CardContent className="h-full min-h-0 p-0 border-none shadow-none rounded-none">
+          <div className="relative h-full overflow-auto">
+            <Table>
+              <ClientTableHeader />
+              <ClientTableContent
+                clients={clients}
+                isLoading={isLoading}
+                error={error}
+                onClientUpdated={fetchClients}
+              />
+              {!isLoading && !error && <ClientTableFooter totalClients={clients.length} />}
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </section>

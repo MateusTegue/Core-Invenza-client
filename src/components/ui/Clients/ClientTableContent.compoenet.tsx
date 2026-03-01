@@ -1,6 +1,8 @@
 import { TableBody, TableCell, TableRow } from "@/components/ui/table"
 import { Client } from "@/constants/models"
 import ClientsItem from "./ClientsItem.component"
+import { Spinner } from "../spinner"
+
 
 
 
@@ -18,7 +20,7 @@ const ClientTableContent = ({ clients, isLoading, error, onClientUpdated }: Clie
         <TableBody>
             <TableRow className="border-0">
                 <TableCell colSpan={7} className="text-center text-muted-foreground py-6">
-                    Cargando clientes...
+                   <Spinner className="mr-1 inline-block" /> Cargando clientes...
                 </TableCell>
             </TableRow>
         </TableBody>

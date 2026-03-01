@@ -18,7 +18,7 @@ const SidebarNav = () => {
   return (
     <div
       className={cn(
-        "h-screen border-r transition-all duration-300 flex flex-col overflow-hidden",
+        "h-screen sticky top-0 shrink-0 border-r transition-all duration-300 flex flex-col overflow-hidden",
         isCollapsed ? "w-16" : "w-48"
       )}
     >

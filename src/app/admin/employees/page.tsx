@@ -15,7 +15,7 @@ const EmployeesPage = () => {
   }
 
   return (
-    <section className="space-y-4">
+    <section className="h-full min-h-0 flex flex-col gap-4 overflow-hidden">
       <Tool
         title="Gestion de empleados"
         description="Crea, busca y administra los usuarios del sistema"

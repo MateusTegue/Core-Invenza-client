@@ -1,5 +1,6 @@
 import { TableBody, TableCell, TableRow } from "@/components/ui/table"
 import UsersItem, { UserListItem } from "@/components/ui/Users/UsersItem.component"
+import { Spinner } from "../spinner"
 
 type UserTableContentProps = {
   users: UserListItem[]
@@ -15,7 +16,7 @@ const UserTableContent = ({ users, isLoading, error, onUserDeleted, onUserUpdate
       <TableBody>
         <TableRow className="border-0">
           <TableCell colSpan={8} className="text-center text-muted-foreground py-6">
-            Cargando usuarios...
+             <Spinner className="mr-1 inline-block" />Cargando usuarios...
           </TableCell>
         </TableRow>
       </TableBody>

@@ -9,9 +9,9 @@ type AdminLayoutProps = {
 const AdminLayout = ({ children }: AdminLayoutProps) => {
   return (
     <ProtectedRoute>
-      <div className="min-h-screen flex bg-background">
+      <div className="h-screen flex bg-background overflow-hidden">
         <SidebarNav />
-        <main className="flex-1 p-4">{children}</main>
+        <main className="flex-1 p-4 overflow-y-auto">{children}</main>
       </div>
     </ProtectedRoute>
   )

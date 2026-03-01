@@ -61,17 +61,19 @@ const UsersList = ({ refreshTrigger = 0, searchQuery = "", onLoadingChange }: Us
     <section className="space-y-4">
       <Card className="rounded-none border-0 shadow-none">
         <CardContent className="p-0 border-none shadow-none rounded-none">
-          <Table>
-            <UserTableHeader />
-            <UserTableContent
-              users={users}
-              isLoading={isLoading}
-              error={error}
-              onUserDeleted={fetchUsers}
-              onUserUpdated={fetchUsers}
-            />
-            {!isLoading && !error && <UserTableFooter totalUsers={users.length} />}
-          </Table>
+          <div className="relative max-h-[65vh] overflow-auto">
+            <Table>
+              <UserTableHeader />
+              <UserTableContent
+                users={users}
+                isLoading={isLoading}
+                error={error}
+                onUserDeleted={fetchUsers}
+                onUserUpdated={fetchUsers}
+              />
+              {!isLoading && !error && <UserTableFooter totalUsers={users.length} />}
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </section>
